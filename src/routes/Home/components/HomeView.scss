@@ -3,7 +3,12 @@
   height: 100%;
 
   & > div {
-    position: relative;
-    height: calc(100vh - 36px);
+    &:nth-of-type(1) {
+      position: relative;
+      height: calc(53vh - 36px);
+    }
+    &:nth-of-type(2) {
+      height: 47vh
+    }
   }
 }
