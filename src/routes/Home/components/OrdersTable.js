@@ -1,9 +1,11 @@
 import React, {
   Component
 } from 'react';
+import { connect } from 'react-redux'
 import ReactTable from 'react-table'
 import Axios from 'axios'
 
+import { saveOrders } from '../../../store/orders'
 import 'react-table/react-table.css'
 import './OrdersTable.scss';
 
@@ -72,7 +74,11 @@ class OrdersTable extends React.Component {
       page: state.page,
       pageSize: state.pageSize
     }).then((res) => {
-        console.log('res >>>>>>>>>>> ', res);
+        let objSaveInStore = {};
+        res.data.data.forEach((elem) => {
+          objSaveInStore[elem.tracking_number] = elem;
+        })
+        this.props.saveOrders(objSaveInStore);
         this.setState({
           data: res.data.data,
           pages: res.data.pages,
@@ -107,4 +113,16 @@ class OrdersTable extends React.Component {
   }
 }
 
-export default OrdersTable
+/* const mapStateToProps = (state, ownProps) => ({
+  active: ownProps.filter === state.visibilityFilter
+}) */
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  saveOrders: (orders) => dispatch(saveOrders(orders))
+})
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(OrdersTable)
+// export default OrdersTable

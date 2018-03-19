@@ -52,6 +52,19 @@ function generateStateAndStatus() {
   return states[getRandomInt(0, 3)] 
 }
 
+function calculateCoords() {
+  let latFrom = 59703;
+  let latTill = 78519;
+  let lngFrom = 05640;
+  let lngTill = 39192;
+  let lat = '37.7';
+  let lng = '-122.4';  
+  return {
+    lat: parseFloat(lat + getRandomInt(latFrom, latTill)),
+    lng: parseFloat(lng + getRandomInt(lngFrom, lngTill))
+  }
+}
+
 function generateData(count) {
   let data = [];
   
@@ -67,7 +80,8 @@ function generateData(count) {
       delivery_state: st.state,
       delivery_status: st.descr,
       delivery_date: calculateRandTimesTamp(),
-      exact_delivery_date: calculateRandTimesTamp()
+      exact_delivery_date: calculateRandTimesTamp(),
+      coord: calculateCoords()
     }) 
   }
 
