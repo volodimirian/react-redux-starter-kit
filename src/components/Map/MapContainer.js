@@ -35,7 +35,7 @@ export class MapContainer extends React.Component {
     for (let key in this.props.orders) {
       if (this.props.orders[key].selected) {
         markers.push(<Marker
-            key={selectedMarkers.length + key + this.props.orders[key].id}
+            key={key}
             className="marker-non-clicked"
             title={this.props.orders[key].tracking_number}
             name={this.props.orders[key].id}
@@ -48,7 +48,7 @@ export class MapContainer extends React.Component {
             }}/>)
       } else {
         markers.push(<Marker
-            key={markers.length + key + this.props.orders[key].id}
+            key={key}
             className="marker-non-clicked"
             title={this.props.orders[key].tracking_number}
             name={this.props.orders[key].id}
