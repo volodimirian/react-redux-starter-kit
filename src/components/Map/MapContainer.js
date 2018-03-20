@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 
 import { saveOrders } from '../../store/orders'
- 
+
 const style = {
   width: '100%',
   height: '100%'
@@ -32,16 +32,15 @@ export class MapContainer extends React.Component {
 
   render() {
     let markers = [];
-    let selectedMarkers = []
     for (let key in this.props.orders) {
       if (this.props.orders[key].selected) {
-        selectedMarkers.push(<Marker
-            key={selectedMarkers.length + key}
+        markers.push(<Marker
+            key={selectedMarkers.length + key + this.props.orders[key].id}
             className="marker-non-clicked"
             title={this.props.orders[key].tracking_number}
             name={this.props.orders[key].id}
             position={this.props.orders[key].coord}
-            onClick={this.selectMarker.bind(this, this.props.orders[key])} 
+            onClick={this.selectMarker.bind(this, this.props.orders[key])}
             icon={{
               url: 'http://icons.iconarchive.com/icons/paomedia/small-n-flat/64/map-marker-icon.png',
               anchor: new this.props.google.maps.Point(32, 32),
@@ -49,25 +48,24 @@ export class MapContainer extends React.Component {
             }}/>)
       } else {
         markers.push(<Marker
-            key={markers.length + key}
+            key={markers.length + key + this.props.orders[key].id}
             className="marker-non-clicked"
             title={this.props.orders[key].tracking_number}
             name={this.props.orders[key].id}
             position={this.props.orders[key].coord}
-            onClick={this.selectMarker.bind(this, this.props.orders[key])} 
-            icon={{
+            onClick={this.selectMarker.bind(this, this.props.orders[key])}
+            icon={this.props.google ? {
               url: 'https://cdn2.iconfinder.com/data/icons/metro-uinvert-dock/256/Google_Maps.png',
               anchor: new this.props.google.maps.Point(32, 32),
               scaledSize: new this.props.google.maps.Size(32, 32)
-            }} />)
+            } : null} />)
       }
-      markers = [...selectedMarkers, ...markers];
     }
 
     return (
-      <Map 
-        google={this.props.google} 
-        style={style} 
+      <Map
+        google={this.props.google}
+        style={style}
         zoom={13}
         visible={this.props.mapVisibility}>
 

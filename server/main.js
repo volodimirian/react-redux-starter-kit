@@ -38,7 +38,7 @@ function generateStateAndStatus() {
     {
       state: 'warehouse_processing',
       descr: 'Delay in delivery'
-    }, 
+    },
     {
       state: 'tracking',
       descr: 'Delivery process is well'
@@ -49,7 +49,7 @@ function generateStateAndStatus() {
     }
   ]
 
-  return states[getRandomInt(0, 3)] 
+  return states[getRandomInt(0, 3)]
 }
 
 function calculateCoords() {
@@ -58,7 +58,7 @@ function calculateCoords() {
   let lngFrom = 05640;
   let lngTill = 39192;
   let lat = '37.7';
-  let lng = '-122.4';  
+  let lng = '-122.4';
   return {
     lat: parseFloat(lat + getRandomInt(latFrom, latTill)),
     lng: parseFloat(lng + getRandomInt(lngFrom, lngTill))
@@ -67,22 +67,22 @@ function calculateCoords() {
 
 function generateData(count) {
   let data = [];
-  
+
   for (let i = 0; i < count; i++) {
     let st = generateStateAndStatus();
     let current_date = (new Date()).valueOf().toString();
     let random = Math.random().toString();
-    
+
     data.push({
       id: getRandomInt(12000, 90000),
       date: calculateRandTimesTamp(),
-      tracking_number: crypto.createHash('sha1').update(current_date + random).digest('hex').slice(0, 10), 
+      tracking_number: crypto.createHash('sha1').update(current_date + random).digest('hex').slice(0, 10),
       delivery_state: st.state,
       delivery_status: st.descr,
       delivery_date: calculateRandTimesTamp(),
       exact_delivery_date: calculateRandTimesTamp(),
       coord: calculateCoords()
-    }) 
+    })
   }
 
   return data;
@@ -113,11 +113,11 @@ if (project.env === 'development') {
   // of development since this directory will be copied into ~/dist
   // when the application is compiled.
   app.use(express.static(path.resolve(project.basePath, 'public')))
-  
+
   app.get('/api/orders', function(req, res, next) {
     res.set('contnet-type', 'application/json')
     res.send({
-      data: generateData(100),
+      data: generateData(10),
       pages: 1
     })
     res.end();
