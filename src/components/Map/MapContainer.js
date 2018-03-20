@@ -1,25 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
+import {Map, Marker, GoogleApiWrapper} from 'google-maps-react';
 
 import { saveOrders } from '../../store/orders'
 
-const style = {
-  width: '100%',
-  height: '100%'
-}
-
 export class MapContainer extends React.Component {
-  state = {
-    mapVisibility: false
-  }
-
-  componentDidMount() {
-    this.setState({
-      mapVisibility: true
-    })
-  }
-
+  
   selectMarker(order) {
     let newOrders = {}
     for (let key in this.props.orders) {
@@ -65,16 +51,10 @@ export class MapContainer extends React.Component {
     return (
       <Map
         google={this.props.google}
-        style={style}
         zoom={13}
         visible={this.props.mapVisibility}>
-
+        
         {markers}
-        {/* <InfoWindow onClose={this.onInfoWindowClose}>
-            <div>
-              <h1>{this.state.selectedPlace.name}</h1>
-            </div>
-        </InfoWindow> */}
       </Map>
     );
   }
@@ -94,7 +74,3 @@ export default connect(
 )(GoogleApiWrapper({
   apiKey: ('AIzaSyALUltJw5KDvpM1uCxDAGLdYG3x5swJVgk')
 })(MapContainer))
-
-/* export default GoogleApiWrapper({
-  apiKey: ('AIzaSyALUltJw5KDvpM1uCxDAGLdYG3x5swJVgk')
-})(MapContainer) */

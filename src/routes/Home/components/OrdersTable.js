@@ -9,6 +9,57 @@ import { saveOrders } from '../../../store/orders'
 import 'react-table/react-table.css'
 import './OrdersTable.scss';
 
+const columns = [{
+  id: 'id',
+  sortable: false,
+  accessor: props => <span className={"two-string-column " + getStateClass(props.delivery_state)}>
+      <div>
+        <strong>Order ID: </strong> {props.id}
+      </div>
+      <div>
+        <strong>Date: </strong> {new Date(props.date).toISOString().slice(0, 10)}
+      </div>
+    </span>
+
+}, {
+  Header: 'Tracking number',
+  id: 'tracking_number',
+  sortable: false,
+  accessor: props => <strong className={getStateClass(props.delivery_state)}>{props.tracking_number}</strong>
+}, {
+  Header: 'Delivery state',
+  id: 'delivery_state',
+  sortable: false,
+  accessor: props => <span className={"state " + getStateClass(props.delivery_state)}><p>{props.delivery_state.split('_').join(' ')}</p></span>
+}, {
+  Header: 'Delivery description',
+  id: 'delivery_status',
+  sortable: false,
+  accessor: props => <span className={"could-be-red " + getStateClass(props.delivery_state)}>
+    {props.delivery_status}
+  </span>
+}, {
+  Header: 'Delivery date',
+  id: 'delivery_date',
+  sortable: false,
+  accessor: props => <span className={"could-be-red " + getStateClass(props.delivery_state)}>{new Date(props.delivery_date).toISOString().slice(0, 10)}</span>
+}, {
+  Header: 'Delivery dely',
+  id: 'delivery_dely',
+  sortable: false,
+  accessor: props => <span className={getStateClass(props.delivery_state)}>{new Date(props.delivery_date - props.exact_delivery_date).toISOString().slice(0, 10)}</span>
+}]
+
+function getStateClass(state) {
+  if (state.indexOf('processing') !== -1) {
+    return 'processing';
+  } else if (state.indexOf('tracking') !== -1) {
+    return 'tracking';
+  } else if (state.indexOf('completed') !== -1) {
+    return 'completed';
+  }
+}
+
 class OrdersTable extends React.Component {
   state = {
     loading: false,
@@ -18,69 +69,16 @@ class OrdersTable extends React.Component {
     data: []
   }
 
-  columns = [{
-    id: 'id',
-    sortable: false,
-    accessor: props => <span className={"two-string-column " + this.getStateClass(props.delivery_state)}>
-        <div>
-          <strong>Order ID: </strong> {props.id}
-        </div>
-        <div>
-          <strong>Date: </strong> {new Date(props.date).toISOString().slice(0, 10)}
-        </div>
-      </span>
-
-  }, {
-    Header: 'Tracking number',
-    id: 'tracking_number',
-    sortable: false,
-    accessor: props => <strong className={this.getStateClass(props.delivery_state)}>{props.tracking_number}</strong>
-  }, {
-    Header: 'Delivery state',
-    id: 'delivery_state',
-    sortable: false,
-    accessor: props => <span className={"state " + this.getStateClass(props.delivery_state)}><p>{props.delivery_state.split('_').join(' ')}</p></span>
-  }, {
-    Header: 'Delivery description',
-    id: 'delivery_status',
-    sortable: false,
-    accessor: props => <span className={"could-be-red " + this.getStateClass(props.delivery_state)}>
-      {props.delivery_status}
-    </span>
-  }, {
-    Header: 'Delivery date',
-    id: 'delivery_date',
-    sortable: false,
-    accessor: props => <span className={"could-be-red " + this.getStateClass(props.delivery_state)}>{new Date(props.delivery_date).toISOString().slice(0, 10)}</span>
-  }, {
-    Header: 'Delivery dely',
-    id: 'delivery_dely',
-    sortable: false,
-    accessor: props => <span className={this.getStateClass(props.delivery_state)}>{new Date(props.delivery_date - props.exact_delivery_date).toISOString().slice(0, 10)}</span>
-  }]
-
   constructor() {
     super();
     this.fetchData = this.fetchData.bind(this);
   }
 
-  getStateClass(state) {
-    if (state.indexOf('processing') !== -1) {
-      return 'processing';
-    } else if (state.indexOf('tracking') !== -1) {
-      return 'tracking';
-    } else if (state.indexOf('completed') !== -1) {
-      return 'completed';
-    }
-  }
-
   componentWillReceiveProps(nextProps) {
-    if (JSON.stringify(this.props.orders) !== nextProps.orders) {
-      Object.values(nextProps.orders).forEach((elem) => elem.selected && console.log('selected data: ', elem))
-      this.setState({
-        data: Object.values(nextProps.orders)
-      })
-    }
+    Object.values(nextProps.orders).forEach((elem) => elem.selected && console.log('selected data: ', elem))
+    this.setState({
+      data: Object.values(nextProps.orders)
+    })
   }
 
   fetchData(state, instance) {
@@ -122,15 +120,11 @@ class OrdersTable extends React.Component {
   }
 
   render() {
-    const { data } = this.state;
-
-    Object.values(data).forEach(elem => elem.selected && console.log('selected data in render: ', elem));
-
     return (
       <ReactTable
-        columns = {this.columns}
+        columns = {columns}
         manual // Forces table not to paginate or sort automatically, so we can handle it server-side
-        data = {data}
+        data = {this.state.data}
         pages = {this.state.pages} // Display the total number of pages
         loading = {this.state.loading} // Display the loading overlay when we need it
         onFetchData = {this.fetchData} // Request new data when things change
@@ -162,4 +156,3 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrdersTable);
-// export default OrdersTable

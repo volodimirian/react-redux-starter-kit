@@ -1,5 +1,3 @@
-import browserHistory from 'react-router/lib/browserHistory'
-
 // ------------------------------------
 // Constants
 // ------------------------------------
@@ -15,13 +13,6 @@ export function saveOrders(data) {
         payload: data
     }
 }
-
-// ------------------------------------
-// Specialized Action Creator
-// ------------------------------------
-/* export const updateLocation = ({ dispatch }) => {
-    return (nextLocation) => dispatch(locationChange(nextLocation))
-} */
 
 // ------------------------------------
 // Reducer
